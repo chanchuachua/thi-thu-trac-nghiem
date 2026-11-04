@@ -11,7 +11,7 @@
         html { scrollbar-width: none; -ms-overflow-style: none; }
 
         body { font-family: Arial, sans-serif; padding: 15px; margin: 0; background-color: #f8f9fa; }
-        h2 { text-align: center; color: #333; font-size: 22px; }
+        h2 { text-align: center; color: #333; font-size: 22px; margin-bottom: 5px; }
         .question-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .question { margin-bottom: 10px; font-weight: bold; font-size: 16px; line-height: 1.4; color: #0056b3; }
         .options label { display: block; margin: 8px 0; padding: 10px; background: #e9ecef; border-radius: 5px; cursor: pointer; transition: background 0.2s; }
@@ -43,7 +43,9 @@
 </head>
 <body>
     <h2>Hệ Thống Thi Thử Trắc Nghiệm</h2>
-    <p class="author">Phát triển bởi: Chan Canh Chua (C3)</p>
+    <p style="text-align: center; font-style: italic; color: #666; font-size: 14px; margin-top: 0; margin-bottom: 20px;">
+        Phát triển bởi: Chan Canh Chua (C3)
+    </p>
     
     <div id="setup-container">
         <label for="examSelect" style="display:block; margin-bottom:10px; font-weight:bold;">Chọn bộ đề thi: </label>
@@ -232,10 +234,9 @@
             window.scrollTo(0, 0);
         }
 
-        // Logic xử lý kéo thả nút cuộn nhanh mượt mà
         const scrollBtn = document.getElementById('fast-scroll-btn');
         let isDragging = false;
-        const btnHalfHeight = 35; // Nửa chiều cao của nút cuộn (70/2)
+        const btnHalfHeight = 35;
 
         function startDrag(e) {
             isDragging = true;
@@ -248,7 +249,6 @@
             const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
             const winH = window.innerHeight;
             
-            // Giới hạn vùng kéo thả trong màn hình để không bị nhảy
             const safeY = Math.max(btnHalfHeight, Math.min(winH - btnHalfHeight, clientY));
             const percent = (safeY - btnHalfHeight) / (winH - btnHalfHeight * 2);
             
@@ -269,7 +269,6 @@
         document.addEventListener('touchend', endDrag);
         document.addEventListener('mouseup', endDrag);
 
-        // Đồng bộ vị trí nút khi vuốt màn hình tự nhiên
         window.addEventListener('scroll', () => {
             if (isDragging) return;
             const winH = window.innerHeight;
