@@ -6,6 +6,10 @@
     <title>Thi Thử Trắc Nghiệm - Phát triển bởi: Chan Canh Chua (C3)</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* Ẩn thanh cuộn gốc của trình duyệt */
+        ::-webkit-scrollbar { width: 0px; background: transparent; display: none; }
+        html { scrollbar-width: none; -ms-overflow-style: none; }
+
         body { font-family: Arial, sans-serif; padding: 15px; margin: 0; background-color: #f8f9fa; }
         h2 { text-align: center; color: #333; font-size: 22px; }
         .question-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -119,7 +123,7 @@
             });
             document.getElementById('loading').style.display = 'none';
             document.getElementById('quiz-container').style.display = 'block';
-            document.getElementById('fast-scroll-btn').style.display = 'flex'; // Hiện nút cuộn khi thi
+            document.getElementById('fast-scroll-btn').style.display = 'flex';
             renderQuiz();
             renderNavGrid();
         }
@@ -174,7 +178,7 @@
             document.getElementById('result').innerText = `Kết quả: ${score}/${quizData.length} câu đúng`;
             document.getElementById('quiz-container').style.display = 'none';
             document.getElementById('post-quiz-controls').style.display = 'block';
-            document.getElementById('fast-scroll-btn').style.display = 'none'; // Ẩn nút cuộn khi có kết quả
+            document.getElementById('fast-scroll-btn').style.display = 'none';
             window.scrollTo(0, 0);
         }
 
@@ -183,7 +187,7 @@
             document.getElementById('quiz-container').style.display = 'block';
             document.getElementById('submit-btn').style.display = 'none';
             document.getElementById('close-review-btn').style.display = 'block';
-            document.getElementById('fast-scroll-btn').style.display = 'flex'; // Hiện lại nút cuộn khi xem lại bài
+            document.getElementById('fast-scroll-btn').style.display = 'flex';
 
             quizData.forEach((item, index) => {
                 const inputs = document.querySelectorAll(`input[name="q${index}"]`);
@@ -221,14 +225,15 @@
             document.getElementById('result').innerText = '';
             document.getElementById('post-quiz-controls').style.display = 'none';
             document.getElementById('quiz-container').style.display = 'none';
-            document.getElementById('fast-scroll-btn').style.display = 'none'; // Ẩn nút cuộn khi ra trang chủ
+            document.getElementById('fast-scroll-btn').style.display = 'none';
             document.getElementById('setup-container').style.display = 'block';
             window.scrollTo(0, 0);
         }
 
-        // Logic xử lý kéo thả nút cuộn nhanh
+        // Logic xử lý kéo thả nút cuộn nhanh mượt mà
         const scrollBtn = document.getElementById('fast-scroll-btn');
         let isDragging = false;
+        const btnHalfHeight = 35; // Nửa chiều cao của nút cuộn (70/2)
 
         function startDrag(e) {
             isDragging = true;
@@ -238,13 +243,16 @@
         function doDrag(e) {
             if (!isDragging) return;
             e.preventDefault(); 
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
             const winH = window.innerHeight;
-            const percent = Math.max(0, Math.min(1, clientY / winH));
-            const maxScroll = document.documentElement.scrollHeight - winH;
             
+            // Giới hạn vùng kéo thả trong màn hình để không bị nhảy
+            const safeY = Math.max(btnHalfHeight, Math.min(winH - btnHalfHeight, clientY));
+            const percent = (safeY - btnHalfHeight) / (winH - btnHalfHeight * 2);
+            
+            const maxScroll = document.documentElement.scrollHeight - winH;
             window.scrollTo(0, maxScroll * percent);
-            scrollBtn.style.top = `${clientY}px`;
+            scrollBtn.style.top = `${safeY}px`;
         }
 
         function endDrag() {
@@ -259,13 +267,14 @@
         document.addEventListener('touchend', endDrag);
         document.addEventListener('mouseup', endDrag);
 
+        // Đồng bộ vị trí nút khi vuốt màn hình tự nhiên
         window.addEventListener('scroll', () => {
             if (isDragging) return;
             const winH = window.innerHeight;
             const maxScroll = document.documentElement.scrollHeight - winH;
             if (maxScroll > 0) {
                 const percent = window.scrollY / maxScroll;
-                const safeTop = Math.max(35, Math.min(winH - 35, percent * winH));
+                const safeTop = btnHalfHeight + percent * (winH - btnHalfHeight * 2);
                 scrollBtn.style.top = `${safeTop}px`;
             }
         });
