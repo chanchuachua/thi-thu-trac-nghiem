@@ -125,7 +125,7 @@
                     <div class="question">Câu ${i + 1}: ${item.q}</div>
                     <div class="options">
                         ${item.options.map(opt => 
-                            `<label id="lbl-${i}-${btoa(unescape(encodeURIComponent(opt))).replace(/[^a-zA-Z0-9]/g, '')}">
+                            `<label>
                                 <input type="radio" name="q${i}" value="${opt}" onchange="updateNav(${i})"> ${opt}
                             </label>`
                         ).join('')}
@@ -184,22 +184,22 @@
                 let isCorrect = false;
                 
                 inputs.forEach(input => {
-                    input.disabled = true; // Khóa input không cho chọn lại
-                    const label = input.parentElement;
+                    input.disabled = true; // Khóa input
+                    const label = input.closest('label'); // Truy xuất trực tiếp thẻ label bao quanh input
                     
-                    // Highlight đáp án đúng (Màu xanh lá)
                     if (input.value === String(item.answer)) {
+                        // Highlight đáp án đúng
                         label.style.color = '#155724';
                         label.style.backgroundColor = '#d4edda';
                         label.style.border = '1px solid #c3e6cb';
                         label.style.fontWeight = 'bold';
                     }
                     
-                    // Highlight đáp án sai người dùng đã chọn (Màu đỏ, gạch ngang)
                     if (input.checked) {
                         if (input.value === String(item.answer)) {
                             isCorrect = true;
                         } else {
+                            // Highlight đáp án người dùng chọn sai
                             label.style.color = '#721c24';
                             label.style.backgroundColor = '#f8d7da';
                             label.style.border = '1px solid #f5c6cb';
@@ -208,7 +208,7 @@
                     }
                 });
 
-                // Cập nhật lại màu lưới điều hướng (Xanh = làm đúng, Đỏ = làm sai/bỏ trống)
+                // Cập nhật màu bảng lưới điều hướng
                 const dot = document.getElementById(`nav-dot-${index}`);
                 if (dot) {
                     dot.className = 'nav-dot'; // Reset class
