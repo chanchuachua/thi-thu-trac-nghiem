@@ -30,15 +30,16 @@
     <h3 id="result"></h3>
     <script>
         const supabaseUrl = 'https://kezzrlltzddpdtktfqzk.supabase.co';
-        const supabaseKey = 'sb_publishable_-OA922t0e8G3z3hM0hwguQ_GIAaGmec';
-        const client = supabase.createClient(supabaseUrl, supabaseKey);
+        const supabaseKey = 'NHAP_LAI_KHOA_EYJ_CUA_BAN_VAO_DAY';
+        const client = window.supabase.createClient(supabaseUrl, supabaseKey);
         let quizData = [];
 
         async function loadExamTypes() {
             const { data, error } = await client.from('de_thi').select('loai_de');
             if (error) {
                 console.error("Lỗi:", error);
-                document.getElementById('examSelect').innerHTML = '<option value="">Lỗi tải dữ liệu</option>';
+                document.getElementById('examSelect').innerHTML = 
+                    '<option value="">Lỗi tải dữ liệu</option>';
                 return;
             }
             const uniqueTypes = [...new Set(data.map(item => item.loai_de).filter(Boolean))];
@@ -72,7 +73,7 @@
         }
 
         function processData(data) {
-            quizData = shuffle(data).map(row => {
+            quizData = shuffle(data).slice(0, 100).map(row => {
                 let options = shuffle([row.A, row.B, row.C, row.D].filter(Boolean));
                 return { q: row.CauHoi, options, answer: row[row.DapAn] || row.DapAn };
             });
@@ -86,7 +87,9 @@
             container.innerHTML = quizData.map((item, i) => `
                 <div class="question">Câu ${i + 1}: ${item.q}</div>
                 <div class="options">
-                    ${item.options.map(opt => `<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>`).join('')}
+                    ${item.options.map(opt => 
+                        `<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>`
+                    ).join('')}
                 </div><br>
             `).join('');
         }
@@ -100,6 +103,7 @@
             document.getElementById('result').innerText = `Điểm: ${score}/${quizData.length}`;
             document.getElementById('setup-container').style.display = 'block';
             document.getElementById('quiz-container').style.display = 'none';
+            window.scrollTo(0, 0);
         }
 
         loadExamTypes();
