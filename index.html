@@ -13,8 +13,11 @@
         body { font-family: Arial, sans-serif; padding: 15px; margin: 0; background-color: #f8f9fa; }
         h2 { text-align: center; color: #333; font-size: 22px; margin-bottom: 5px; }
         .question-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .question { margin-bottom: 10px; font-weight: bold; font-size: 16px; line-height: 1.4; color: #0056b3; }
-        .options label { display: block; margin: 8px 0; padding: 10px; background: #e9ecef; border-radius: 5px; cursor: pointer; transition: background 0.2s; }
+        
+        /* Thêm white-space: pre-wrap để giữ nguyên khoảng trắng gốc */
+        .question { margin-bottom: 10px; font-weight: bold; font-size: 16px; line-height: 1.4; color: #0056b3; white-space: pre-wrap; }
+        .options label { display: block; margin: 8px 0; padding: 10px; background: #e9ecef; border-radius: 5px; cursor: pointer; transition: background 0.2s; white-space: pre-wrap; }
+        
         .options label:active { background: #d0e1f9; }
         .options input { margin-right: 10px; transform: scale(1.2); }
         button { width: 100%; padding: 12px; font-size: 16px; font-weight: bold; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
